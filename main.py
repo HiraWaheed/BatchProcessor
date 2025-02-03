@@ -2,8 +2,8 @@ import logging
 import os
 import pandas as pd
 from constants import model
-from gpt import check_batch_status, create_batch_job, create_task, fetch_batch_details, read_file_contents, upload_batch_file
-from utils import reading_retrieved_results, write_tasks_to_json
+from gpt import  create_batch_job, create_task, upload_batch_file
+from utils import write_tasks_to_json
 
 def main(model, inputs_reading_dir, outputs_writing_dir):
     """
@@ -47,14 +47,4 @@ if __name__ == "__main__":
     batch_job = None
     
     batch_job = main(model, inputs_reading_dir, outputs_writing_dir)
-
-    status = check_batch_status(batch_job.id)
     
-    
-    if status == 'completed':
-        batch_job = fetch_batch_details()
-        if batch_job.data[0].output_file_id is not None:
-            reading_retrieved_results(model, batch_job.data[0])
-        elif batch_job.data[0].error_file_id is not None:
-            logging.error("Batch job has error file")
-            read_file_contents(batch_job.data[0].error_file_id)
